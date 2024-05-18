@@ -316,7 +316,7 @@ impl Renderable for Element {
                 );
                 match inner{
                     ShapeInner::Text(text) => canvas.draw_text(self.pos.center(), text.as_str(), &self.look),
-                    ShapeInner::ForeignElement(text, size) => canvas.draw_foreign_element(self.pos.center(),*size, text)
+                    ShapeInner::ForeignElement(text, size) => canvas.draw_foreign_element(self.pos.bbox(false).0,*size, text)
                 }
             
             }
