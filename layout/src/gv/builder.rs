@@ -304,17 +304,17 @@ impl GraphBuilder {
             label = val.clone();
         }
 
-        let mut shape = ShapeKind::Circle(label.clone());
+        let mut shape = ShapeKind::Circle(ShapeInner::Text(label.clone()));
 
         // Set the shape.
         if let Option::Some(val) = lst.get(&"shape".to_string()) {
             match &val[..] {
                 "box" => {
-                    shape = ShapeKind::Box(label);
+                    shape = ShapeKind::Box( ShapeInner::Text(label));
                     make_xy_same = false;
                 }
                 "doublecircle" => {
-                    shape = ShapeKind::DoubleCircle(label);
+                    shape = ShapeKind::DoubleCircle(ShapeInner::Text(label));
                     make_xy_same = true;
                 }
                 "record" => {
@@ -324,7 +324,7 @@ impl GraphBuilder {
                     rounded_corder_value = 15;
                     shape = record_builder(&label);
                 }
-                _ => shape = ShapeKind::Circle(label),
+                _ => shape = ShapeKind::Circle(ShapeInner::Text(label)),
             }
         }
 

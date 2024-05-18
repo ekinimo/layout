@@ -241,6 +241,24 @@ impl RenderBackend for SVGWriter {
         self.content.push_str(&line);
     }
 
+    fn draw_foreign_element(
+        &mut self,
+        xy: Point,
+        size:Point,
+        text: &str,
+    ) { 
+        self.grow_window(xy, size);
+        let line = format!(
+            "<foreigObject x=\"{}\" y=\"{}\" width=\"{}\" height=\"{}\"> {text} </foreigObject>",
+            xy.x,
+            xy.y,
+            size.x,
+            size.y,
+        );
+
+        self.content.push_str(&line);
+    }
+
     fn draw_arrow(
         &mut self,
         // This is a list of vectors. The first vector is the "exit" vector

@@ -50,14 +50,23 @@ pub fn get_shape_size(
     make_xy_same: bool,
 ) -> Point {
     let mut res = match s {
-        ShapeKind::Box(text) => {
+        ShapeKind::Box(ShapeInner::Text(text)) => {
             pad_shape_scalar(get_size_for_str(text, font), BOX_SHAPE_PADDING)
         }
-        ShapeKind::Circle(text) => {
+        ShapeKind::Box(ShapeInner::ForeignElement(_,size )) => {
+            pad_shape_scalar(*size, BOX_SHAPE_PADDING)
+        }
+        ShapeKind::Circle(ShapeInner::Text(text)) => {
             pad_shape_scalar(get_size_for_str(text, font), CIRCLE_SHAPE_PADDING)
         }
-        ShapeKind::DoubleCircle(text) => {
+        ShapeKind::Circle(ShapeInner::ForeignElement(_,size )) => {
+            pad_shape_scalar(*size, CIRCLE_SHAPE_PADDING)
+        }
+        ShapeKind::DoubleCircle(ShapeInner::Text(text)) => {
             pad_shape_scalar(get_size_for_str(text, font), CIRCLE_SHAPE_PADDING)
+        }
+        ShapeKind::DoubleCircle(ShapeInner::ForeignElement(_,size )) => {
+            pad_shape_scalar(*size, CIRCLE_SHAPE_PADDING)
         }
         ShapeKind::Record(sr) => {
             pad_shape_scalar(get_record_size(sr, dir, font), BOX_SHAPE_PADDING)
@@ -297,7 +306,7 @@ impl Renderable for Element {
                     canvas,
                 );
             }
-            ShapeKind::Box(text) => {
+            ShapeKind::Box(inner) => {
                 canvas.draw_rect(
                     self.pos.bbox(false).0,
                     self.pos.size(false),
@@ -305,18 +314,25 @@ impl Renderable for Element {
                     self.properties.clone(),
                     Option::None,
                 );
-                canvas.draw_text(self.pos.center(), text.as_str(), &self.look);
+                match inner{
+                    ShapeInner::Text(text) => canvas.draw_text(self.pos.center(), text.as_str(), &self.look),
+                    ShapeInner::ForeignElement(text, size) => canvas.draw_foreign_element(self.pos.center(),*size, text)
+                }
+            
             }
-            ShapeKind::Circle(text) => {
+            ShapeKind::Circle(inner) => {
                 canvas.draw_circle(
                     self.pos.center(),
                     self.pos.size(false),
                     &self.look,
                     self.properties.clone(),
                 );
-                canvas.draw_text(self.pos.center(), text.as_str(), &self.look);
+                match inner{
+                    ShapeInner::Text(text) => canvas.draw_text(self.pos.center(), text.as_str(), &self.look),
+                    ShapeInner::ForeignElement(text, size) => canvas.draw_foreign_element(self.pos.center(),*size, text)
+                }
             }
-            ShapeKind::DoubleCircle(text) => {
+            ShapeKind::DoubleCircle(inner) => {
                 canvas.draw_circle(
                     self.pos.center(),
                     self.pos.size(false),
@@ -329,7 +345,10 @@ impl Renderable for Element {
                     &self.look,
                     Option::None,
                 );
-                canvas.draw_text(self.pos.center(), text.as_str(), &self.look);
+                match inner{
+                    ShapeInner::Text(text) => canvas.draw_text(self.pos.center(), text.as_str(), &self.look),
+                    ShapeInner::ForeignElement(text, size) => canvas.draw_foreign_element(self.pos.center(),*size, text)
+                }
             }
             ShapeKind::Connector(label) => {
                 if debug {

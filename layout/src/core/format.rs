@@ -76,8 +76,10 @@ pub trait RenderBackend {
     /// Draw an ellipse with the center \p xy, and size \p size.
     fn draw_circle(&mut self, xy: Point, size: Point, look: &StyleAttr,properties:Option<String>);
 
-    /// Draw a labe.
+    /// Draw a label.
     fn draw_text(&mut self, xy: Point, text: &str, look: &StyleAttr);
+    /// Draw a foreign element.
+    fn draw_foreign_element(&mut self, xy: Point,size:Point, text: &str);
 
     /// Draw an arrow, with a label, with the style parameters in \p look.
     fn draw_arrow(

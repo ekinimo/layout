@@ -36,24 +36,31 @@ impl RecordDef {
 }
 
 #[derive(Clone)]
+pub enum ShapeInner {
+    Text(String),
+    ForeignElement(String,Point),
+}
+
+#[derive(Clone)]
 pub enum ShapeKind {
     None,
-    Box(String),
-    Circle(String),
-    DoubleCircle(String),
+    Box(ShapeInner),
+    Circle(ShapeInner),
+    DoubleCircle(ShapeInner),
     Record(RecordDef),
     Connector(Option<String>),
 }
 
 impl ShapeKind {
     pub fn new_box(s: &str) -> Self {
-        ShapeKind::Box(s.to_string())
+        ShapeKind::Box(ShapeInner::Text(s.to_string()))
     }
+    
     pub fn new_circle(s: &str) -> Self {
-        ShapeKind::Circle(s.to_string())
+        ShapeKind::Circle(ShapeInner::Text(s.to_string()))
     }
     pub fn new_double_circle(s: &str) -> Self {
-        ShapeKind::DoubleCircle(s.to_string())
+        ShapeKind::DoubleCircle(ShapeInner::Text(s.to_string()))
     }
     pub fn new_record(r: &RecordDef) -> Self {
         ShapeKind::Record(r.clone())
