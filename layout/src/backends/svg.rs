@@ -249,7 +249,7 @@ impl RenderBackend for SVGWriter {
     ) { 
         self.grow_window(xy, size);
         let line = format!(
-            "<g><foreigObject x=\"{}\" y=\"{}\" width=\"{}\" height=\"{}\"> {text} </foreigObject></g>",
+            "<foreignObject x=\"{}\" y=\"{}\" width=\"{}\" height=\"{}\"> {text} </foreignObject></g>",
             xy.x,
             xy.y,
             size.x,
